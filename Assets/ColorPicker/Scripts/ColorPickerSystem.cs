@@ -19,7 +19,7 @@ namespace ColorPickerUnity
     {
         public bool usesAlpha = true;
         [SerializeField] private ColorProperties colorProperties = new ColorProperties();
-        [SerializeField] private List<ColorPropertyUI> colorPropertiesList; //Used to iterate the properties
+        [HideInInspector] private List<ColorPropertyUI> colorPropertiesList; //Used to iterate the properties
         [SerializeField] private HexSanitizer hexInput;
         [SerializeField] private ColorPickerSlider sliderRGBHSL;
         [SerializeField] private Slider sliderAlpha;

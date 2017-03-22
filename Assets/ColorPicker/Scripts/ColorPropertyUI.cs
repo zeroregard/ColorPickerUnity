@@ -12,7 +12,7 @@ namespace ColorPickerUnity
         public InputField inputField;
         public Toggle radioButton;
         [SerializeField] private ColorPickerSystem colorPickerSystem;
-        [HideInInspector] public ColorPickerSystem.ColorViewMode colorViewType;
+        public ColorPickerSystem.ColorViewMode colorViewType;
 
         public void Start()
         {
