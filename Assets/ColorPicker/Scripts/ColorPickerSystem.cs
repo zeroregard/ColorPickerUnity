@@ -6,7 +6,7 @@ using System;
 namespace ColorPickerUnity
 {
     [Serializable]
-    public class ColorProperties //I mainly have this class just to be able to collapse the properties in the inspector
+    public class ColorProperty //I mainly have this class just to be able to collapse the properties in the inspector
     {
         public ColorPropertyUI Red;
         public ColorPropertyUI Green;
@@ -18,21 +18,27 @@ namespace ColorPickerUnity
     public class ColorPickerSystem : MonoBehaviour
     {
         public bool usesAlpha = true;
-        [SerializeField] private ColorProperties colorProperties = new ColorProperties();
+        public bool usesInputFields = true;
+
+        [SerializeField]  private ColorProperty colorProperties = new ColorProperty(); //if !usesInputFields, hide this.
         [HideInInspector] private List<ColorPropertyUI> colorPropertiesList; //Used to iterate the properties
-        [SerializeField] private HexSanitizer hexInput;
-        [SerializeField] private ColorPickerSlider sliderRGBHSL;
-        [SerializeField] private Slider sliderAlpha;
-        [SerializeField] private InputField inputAlpha;
-        [SerializeField] private ColorPickerTexturizer colorPickerTwoD;
+        [SerializeField]  private HexSanitizer hexInput;
+        [SerializeField]  private ColorPickerSlider sliderRGBHSL;
+        [SerializeField]  private Slider sliderAlpha;
+        [SerializeField]  private InputField inputAlpha;
+        [SerializeField]  private ColorPickerTexturizer colorPickerTwoD;
 
         private RGBHSL currentRGBHSL;
         [SerializeField] private Image imageCurrentColor;
 
 
+
         public void Start()
         {
-            colorPropertiesList = new List<ColorPropertyUI> { colorProperties.Red, colorProperties.Green, colorProperties.Blue, colorProperties.Hue, colorProperties.Saturation, colorProperties.Lightness };
+            if (usesInputFields)
+            {
+                colorPropertiesList = new List<ColorPropertyUI> { colorProperties.Red, colorProperties.Green, colorProperties.Blue, colorProperties.Hue, colorProperties.Saturation, colorProperties.Lightness };
+            }
             RGBHSL_SliderValueChanged(0);
             if (!usesAlpha)
             {
@@ -64,7 +70,7 @@ namespace ColorPickerUnity
             UpdatePicker(sliderRGBHSL.sliderColorPicker.value);
             colorPickerTwoD.colorPickerCursor.rectTransform.anchoredPosition = GetSpecificColorLocation(currentRGBHSL);
         }
-        #region ColorSetting
+#region ColorSetting
         public void SetColorFromHexInput(RGBHSL color)
         {
             UpdateCurrentColor(color);
@@ -116,17 +122,18 @@ namespace ColorPickerUnity
 
         public void SetColorFromXYPicker(RGBHSL color)
         {
-
-            foreach (var property in colorPropertiesList)
+            if (usesInputFields)
             {
-                property.SetValueFromSystem(color);
+                foreach (var property in colorPropertiesList)
+                {
+                    property.SetValueFromSystem(color);
+                }
+                SetHexInput(color);
             }
-
             UpdateCurrentColor(color);
-            SetHexInput(color);
             sliderRGBHSL.ChangeSliderTexture(CurrentMode, color);
         }
-        #endregion
+#endregion
         /// <summary>
         /// Updates the stored color (CurrentHexColor) and the visualization of the color
         /// </summary>
